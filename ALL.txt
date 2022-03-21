@@ -327,3 +327,343 @@ Sama seperti pada constructor function, dalam class pun kita bisa menambahkan pr
 Karena hasil akhirnya adalah sebuah object, jadi menambahkan property di class bisa juga dilakukan di instance object nya
 
 Kode : Property di Class
+<script>
+
+    class Person {
+
+        constructor(name) {
+            this.name = name;
+        }
+
+    }
+
+    const eko = new Person("Eko");
+    console.info(eko);
+    console.info(eko.name);
+
+    const budi = new Person("Budi");
+
+</script>
+
+Method di Class
+Membuat method di class sebenarnya bisa dilakukan dengan cara seperti menambahkan method di constructor function
+Namun, hal tersebut sebenarnya menambahkan method ke dalam instance object
+Khusus untuk method sebaiknya kita menambahkan ke prototype, bukan ke instance object
+Untung nya di class, ada cara mudah menambahkan method dan secara otomatis ditambahkan ke prototype
+
+Kode : Method di Class
+<script>
+
+    class Person {
+
+        constructor(name) {
+            this.name = name;
+        }
+
+        sayHello(name) {
+            console.info(`Hello ${name}, my name is ${this.name}`);
+        }
+
+    }
+
+    const eko = new Person("Eko");
+    console.info(eko);
+    eko.sayHello('Joko');
+
+    const budi = new Person("Budi");
+    console.info(budi);
+    budi.sayHello('Joko');
+
+</script>
+
+Class Inheritance
+Sebelumnya kita sudah tahu bahwa prototype mendukung pewarisan, walaupun agak sedikit tricky cara pembuatannya
+Untungnya itu diperbaiki di ES6 dengan fitur class nya
+Sebuah class bisa melakukan pewarisan dari class lainnya dengan menggunakan kata kunci extends
+Di JavaScript, class inheritance sama seperti prototype inheritance, hanya bisa memiliki satu parent class
+
+Kode : Class Inheritance (1)
+<script>
+
+    class Employee {
+        sayHello(name) {
+            console.info(`Hello ${name}, my name is employee ${this.name}`);
+        }
+    }
+
+    class Manager extends Employee {
+        sayHello(name) {
+            console.info(`Hello ${name}, my name is manager ${this.name}`);
+        }
+    }
+
+    const budi = new Employee();
+    budi.name = "Budi";
+    budi.sayHello("Joko");
+
+    const eko = new Manager();
+    eko.name = "Eko";
+    eko.sayHello("Joko");
+
+    console.info(budi);
+    console.info(eko);
+
+</script>
+
+Super Constructor
+Class Inheritance sifatnya seperti Prototype Inheritance
+Bagaimana dengan Constructor Inheritance? Sebenarnya Constructor Inheritance hanyalah melakukan eksekusi constructor lain dengan tujuan agar property di constructor lain bisa ditambahkan ke instance object ini
+Dalam kasus ini, jika kita ingin mencapai hasil yang sama, kita bisa menggunakan kata kunci super di dalam constructor
+Kata kunci super digunakan untuk memanggil constructor super class
+Jika di child class kita membuat constructor, maka kita wajib memanggil parent constructor, walaupun di parent tidak ada constructor
+
+Kode : Super Constructor (1)
+<script>
+
+    class Employee {
+
+        constructor(firstName) {
+            this.firstName = firstName;
+        }
+
+        sayHello(name) {
+            console.info(`Hello ${name}, my name is employee ${this.firstName}`);
+        }
+    }
+
+    class Manager extends Employee {
+
+        constructor(firstName, lastName) {
+            super(firstName);
+            this.lastName = lastName;
+        }
+
+        sayHello(name) {
+            console.info(`Hello ${name}, my name is manager ${this.firstName} ${this.lastName}`);
+        }
+    }
+
+    const budi = new Employee("Budi");
+    budi.sayHello("Joko");
+
+    const eko = new Manager("Eko", "Khannedy");
+    eko.sayHello("Joko");
+
+    console.info(budi);
+    console.info(eko);
+
+</script>
+
+Super Method
+Selain digunakan untuk memanggil constructor milih parent class, kata kunci super juga bisa digunakan untuk mengakses method parent class
+Caranya bisa menggunakan super titik nama function nya
+Dengan kata lain, super sebenarnya adalah reference ke parent prototype, mirip seperti __proto__
+
+Kode : Super Method
+<script>
+
+    class Shape {
+        paint(){
+            console.info("Paint Shape");
+        }
+    }
+
+    class Circle extends Shape{
+        paint(){
+            super.paint();
+            console.info("Paint Circle");
+        }
+    }
+
+    const circle = new Circle();
+    circle.paint();
+
+</script>
+
+Getter dan Setter di Class
+Class juga mendukung pembuatan getter dan setter
+Perlu diingat, getter dan setter ini akan berada di prototype, bukan di instance object
+
+Kode : Getter dan Setter
+<script>
+
+    class Person {
+        constructor(firstName, lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        get fullName(){
+            return `${this.firstName} ${this.lastName}`;
+        }
+
+        set fullName(value){
+            const result = value.split(" ");
+            this.firstName = result[0];
+            this.lastName = result[1];
+        }
+    }
+
+    const eko = new Person("Eko", "Khannedy");
+    console.info(eko);
+    console.info(eko.fullName);
+
+    eko.fullName = "Budi Nugraha";
+    console.info(eko);
+
+</script>
+
+Public Class Field
+
+Class Field
+Biasanya, saat kita ingin menambahkan field (property yang berisi value), kita biasanya tambahkan di constructor
+Namun, ada proposal di EcmaScript yang mengajukan pembuatan public class field ditempatkan diluar constructor, selevel dengan penempatan  method
+Proposal ini masih belum final, namun beberapa browser sudah mendukung nya
+https://github.com/tc39/proposal-class-fields 
+
+Public Class Field
+Dalam proposal tersebut juga disebutkan bahwa EcmaScript akan mendukung access modifier public dan private
+Public artinya bisa diakses dari luar class, dan private hanya bisa diakses dari dalam class saja
+Private class field akan kita bahas di chapter selanjutnya
+Untuk membuat public class field, kita bisa langsung buat nama field dengan value nya selevel dengan method
+Jika kita tidak memasukkan value ke dalam field tersebut, artinya field tersebut memiliki value undefined
+
+Kode : Public Class Field
+<script>
+
+    class Customer {
+
+        firstName;
+        lastName;
+        balance = 0;
+
+        constructor(firstName, lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        sayHello(){
+
+        }
+    }
+
+    const eko = new Customer("Eko", "Khannedy");
+    console.info(eko);
+
+</script>
+
+Private Class Field
+Secara default, saat kita menambahkan field, maka field tersebut bisa diakses dari manapun
+Jika kita ingin membuat field yang bersifat private (hanya bisa diakses di dalam class), kita bisa menggunakan tanda # sebelum nama field nya
+Ini dinamakan private class field, dan hanya bisa diakses dari dalam class saja
+
+Kode : Private Class Field
+<script>
+
+    class Counter {
+
+        #counter = 0;
+
+        increment(){
+            this.#counter++;
+        }
+
+        decrement(){
+            this.#counter--;
+        }
+
+        get(){
+            return this.#counter;
+        }
+
+    }
+
+    const counter = new Counter();
+
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    counter.increment();
+
+    console.info(counter.get());
+
+    counter.counter = 100;
+
+    console.info(counter);
+
+</script>
+
+Private Method
+Sama seperti field, terdapat proposal juga untuk menambah fitur private method di EcmaScript
+Dengan demikian, access modifier private juga bisa digunakan di method
+Caranya sama, dengan menambahkan tanda # diawal method, maka secara otomatis method tersebut adalah private
+Ingat fitur ini masih dalam tahapan, belum benar-benar menjadi standard EcmaScript, jadi mungkin tidak semua browser mendukung fitur ini
+https://github.com/tc39/proposal-private-methods 
+
+Kode : Private Method
+<script>
+
+    class Person {
+
+        say(name){
+            if(name){
+                this.#sayWithName(name);
+            }else{
+                this.#sayWithoutName();
+            }
+        }
+
+        #sayWithoutName(){
+            console.info("Hello");
+        }
+
+        #sayWithName(name){
+            console.info(`Hello ${name}`);
+        }
+
+    }
+
+    const eko = new Person();
+    eko.say("Joko");
+
+</script>
+
+Operator instanceof
+Kadang ada kasus kita ingin mengecek apakah sebuah object merupakan instance dari class tertentu atau bukan
+Kita tidak bisa menggunakan operator typeof, karena object dari class, jika kita gunakan operator typeof, hasilnya adalah “object”
+Operator instanceof akan menghasilkan boolean, true jika benar object tersebut adalah instance object nya, atau false jika bukan
+
+Kode : Operator instanceof
+<script>
+
+    class Employee {
+
+    }
+
+    class Manager extends Employee {
+
+    }
+
+    const budi = new Employee();
+    const eko = new Manager();
+
+    console.info(typeof budi);
+    console.info(typeof eko);
+
+    console.info(budi instanceof Employee); // true
+    console.info(budi instanceof Manager); // false
+
+    console.info(eko instanceof Employee); // true
+    console.info(eko instanceof Manager); // true
+
+</script>
+
+Operator instanceof di Class Inheritance
+Operator instanceof mendukung class inheritance, artinya instanceof juga bisa digunakan untuk mengecek, apakah sebuah object adalah instance dari class tertentu, atau turunan dari class tertentu?
+
+Static Class Field
+
+Kata Kunci static
+static adalah kata kunci yang bisa kita tambahkan sebelum field atau method, biasannya ketika kita membuat field atau method, maka secara otomatis field akan menjadi property di instance object, dan method akan menjadi function di prototype
+Jika kita tambahkan static, maka hal itu tidak terjadi
