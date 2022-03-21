@@ -222,5 +222,108 @@ Sekarang kita sudah tahu, bahwa prototype selalu memiliki parent, artinya dia ad
 Pertanyaannya bagaimana jika kita ingin melakukan inheritance ke Prototype lain?
 Hal ini juga bisa dilakukan, namun agak sedikit tricky, karena hal ini, sebenarnya untuk JavaScript modern, tidak direkomendasikan lagi praktek OOP menggunakan Prototype, karena di ES6 sudah dikenalkan kata kunci class yang akan nanti dibahas di chapter tersendiri
 
-Kode : Prototype Inheritance Salah (1)
+Kode :
+<script>
 
+    function Employee(name) {
+        this.name = name;
+    }
+
+    function Manager(name) {
+        this.name = name;
+    }
+
+    // Manager.prototype = Employee.prototype; // salah
+    Manager.prototype = Object.create(Employee.prototype);
+
+    Manager.prototype.sayHello = function (name) {
+        console.info(`Hello ${name}, my name is Manager ${this.name}`);
+    }
+
+    Employee.prototype.sayHello = function (name) {
+        console.info(`Hello ${name}, my name is Employee ${this.name}`);
+    }
+
+    const employee = new Employee("Budi");
+    employee.sayHello("Joko");
+
+    const manager = new Manager("Eko");
+    manager.sayHello("Joko");
+
+    console.info(employee);
+    console.info(manager);
+
+</script>
+
+Kode : Prototype Inheritance Salah (1)
+    // Manager.prototype = Employee.prototype; // salah
+
+Kode : Prototype Inheritance Benar (1)
+    function Employee(name) {
+        this.name = name;
+    }
+
+    function Manager(name) {
+        this.name = name;
+    }
+
+    Manager.prototype = Object.create(Employee.prototype);
+
+    Manager.prototype.sayHello = function (name) {
+        console.info(`Hello ${name}, my name is Manager ${this.name}`);
+    }
+
+    Employee.prototype.sayHello = function (name) {
+        console.info(`Hello ${name}, my name is Employee ${this.name}`);
+    }
+
+    const employee = new Employee("Budi");
+    employee.sayHello("Joko");
+
+    const manager = new Manager("Eko");
+    manager.sayHello("Joko");
+
+    console.info(employee);
+    console.info(manager);
+
+Diagram : Prototype Inheritance Benar
+
+Kata Kunci Class
+
+Membuat Class
+Sejak EcmaScript versi 6, diperkenalkan kata kunci baru, yaitu class, ini merupakan kata kunci yang digunakan untuk membuat class di JavaScript
+Dengan kata kunci class, kita tidak perlu lagi menggunakan constructor function untuk membuat class
+
+Kode : Membuat Class
+    class Person {
+
+    }
+
+    const eko = new Person();
+    console.info(eko);
+
+Constructor di Class
+Karena bentuk constructor function mirip dengan function, jadi kita bisa menambah parameter pada constructor function, lantas bagaimana dengan class?
+Di class juga kita bisa menambah constructor, dimana dengan menggunakan constructor, kita juga bisa menambah parameter saat pertama kali membuat object nya
+Untuk membuat constructor di class, kita bisa menggunakan kata kunci constructor
+
+Kode : Constructor di Class
+    class Person {
+
+        constructor(name) {
+            // kode apapun
+            console.info(`Membuat Person ${name}`);
+        }
+
+    }
+
+    const eko = new Person("Eko");
+    console.info(eko);
+
+    const budi = new Person("Budi");
+
+Property di Class
+Sama seperti pada constructor function, dalam class pun kita bisa menambahkan property
+Karena hasil akhirnya adalah sebuah object, jadi menambahkan property di class bisa juga dilakukan di instance object nya
+
+Kode : Property di Class
