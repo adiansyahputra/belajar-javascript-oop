@@ -667,3 +667,395 @@ Static Class Field
 Kata Kunci static
 static adalah kata kunci yang bisa kita tambahkan sebelum field atau method, biasannya ketika kita membuat field atau method, maka secara otomatis field akan menjadi property di instance object, dan method akan menjadi function di prototype
 Jika kita tambahkan static, maka hal itu tidak terjadi
+
+Static Class Field
+Jika kita tambahkan static dalam class field, secara otomatis field tersebut bukan lagi milik instance object, melainkan milik class nya itu sendiri
+Biasanya static digunakan jika kita ingin membuat utility field atau function
+Cara mengakses static class field pun tidak lagi lewat object, melainkan lewat class nya
+Static class field bisa diartikan sifatnya global, tidak peduli diakses dimana atau siapa yang mengakses, hasilnya akan sama
+
+Kode : Static Class Field
+<script>
+
+    class Configuration {
+        static name = "Belajar JavaScript OOP";
+        static version = 1.0;
+        static author = "Eko Kurniawan"
+    }
+
+    const config = new Configuration();
+    console.info(config);
+
+    Configuration.author = "Eko Khannedy";
+
+    console.info(Configuration.name);
+    console.info(Configuration.version);
+    console.info(Configuration.author);
+
+</script>
+
+Kode : Mengakses Static Class Field
+    console.info(Configuration.name);
+    console.info(Configuration.version);
+    console.info(Configuration.author);
+
+Static Method
+Kata kunci static juga tidak hanya bisa ditambahkan di field, tapi juga di method
+Jika kita tambahkan di method, artinya method tersebut jadi milik class nya, bukan prototype
+Dan untuk mengakses method tersebut, kita juga bisa lakukan seperti mengakses static class field
+
+Kode : Static Method
+<script>
+
+    class MathUtil {
+
+        static sum(...numbers) {
+            let total = 0;
+            for (const number of numbers) {
+                total += number;
+            }
+            return total;
+        }
+
+    }
+
+    const result = MathUtil.sum(1, 1, 1, 1, 1);
+    console.info(result);
+
+</script>
+
+Error
+Saat membuat aplikasi, sudah tentu kita tidak akan terhindar dari yang namanya error
+Di JavaScript, Error merupakan sesuatu yang sudah standar
+Banyak sekali class error di JavaScript, namun semua class error di JavaScript selalu berujung di class Error, artinya class Error adalah superclass untuk semua jenis error di JavaScript
+Contoh class error yang terdapat di JavaScript contohnya SyntaxError, TypeError, EvalError, dan lain-lain
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#error_types 
+
+Throw Error
+Saat kita membuat instance object dari class Error, tidak lantas otomatis terjadi error
+Kita perlu memberitahu program kita, bahwa kita akan mentrigger sebuah error terjadi, atau istilahnya adalah melempar error (throw error)
+Untuk melempar error, kita bisa gunakan kata kunci throw, diikuti dengan instance object error nya
+Jika terjadi error, maka otomatis kode program kita akan terhenti, dan kita bisa melihat detail errornya di console di aplikasi browser kita
+
+Kode : Throw Error
+<script>
+
+    class MathUtil {
+
+        static sum(...numbers) {
+
+            if(numbers.length === 0){
+                throw new Error("Total parameter harus lebih dari 0");
+            }
+
+            let total = 0;
+            for (const number of numbers) {
+                total += number;
+            }
+            return total;
+        }
+
+    }
+
+    console.info(MathUtil.sum());
+    console.info("Eko");
+
+    const result = MathUtil.sum(1, 1, 1, 1, 1);
+    console.info(result);
+
+</script>
+
+Error Handling
+Saat terjadi error di kode program JavaScript, kadang kita tidak ingin program kita berhenti
+Di JavaScript, kita bisa menangkap jika terjadi error
+Kita bisa menggunakan try catch statement untuk menangkap error
+Pada block try, kita akan mencoba mengakses kode program yang bisa menyebabkan error, dan jika terjadi error, block try akan berhenti dan otomatis masuk ke block catch
+Jika tidak terjadi error, block catch tidak akan dieksekusi
+
+Kode : Error Handling
+<script>
+
+    class MathUtil {
+
+        static sum(...numbers) {
+
+            if (numbers.length === 0) {
+                throw new Error("Total parameter harus lebih dari 0");
+            }
+
+            let total = 0;
+            for (const number of numbers) {
+                total += number;
+            }
+            return total;
+        }
+
+    }
+
+    try {
+        console.info(MathUtil.sum());
+        console.info("Eko");
+    } catch (error) {
+        console.info(`Terjadi error : ${error.message}`);
+    } finally {
+        console.info("Program selesai");
+    }
+
+    console.info("Khannedy");
+
+    class Counter {
+
+        #counter = 1;
+
+        next() {
+            try {
+                return this.#counter;
+            } finally {
+                this.#counter++;
+            }
+        }
+
+    }
+
+    const counter = new Counter();
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+
+</script>
+
+Kata Kunci finally
+Kadang kita ingin melakukan sesuatu entah itu terjadi error ataupun tidak
+Dalam try catch, kita bisa menambahkan block finally
+Block finally ini akan selalu dieksekusi setelah try catch selesai, entah terjadi error atau tidak, block finally akan selalu dieksekusi
+
+Kode : Kata Kunci finally
+    try {
+        console.info(MathUtil.sum());
+        console.info("Eko");
+    } catch (error) {
+        console.info(`Terjadi error : ${error.message}`);
+    } finally {
+        console.info("Program selesai");
+    }
+
+Try Finally
+Kata kunci finally juga bisa digunakan tanpa perlu menggunakan catch 
+Biasanya ini digunakan dalam kasus tertentu
+
+Kode : Try Finally
+    class Counter {
+
+        #counter = 1;
+
+        next() {
+            try {
+                return this.#counter;
+            } finally {
+                this.#counter++;
+            }
+        }
+
+    }
+    const counter = new Counter();
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+    console.info(counter.next());
+
+Membuat Class Error Manual
+Walaupun JavaScript sudah memiliki standard class Error
+Namun alangkah baiknya, kita membedakan tiap jenis error
+Untuk membuat error sendiri secara manual sangatlah mudah, cukup membuat class turunan dari class Error
+Dan jangan lupa tambahkan parameter message, agar bisa dikirimkan ke parameter di constructor class Error
+
+Kode : Class ValidationError 
+<script>
+
+    class ValidationError extends Error {
+        constructor(message, field) {
+            super(message);
+            this.field = field;
+        }
+    }
+
+    class MathUtil {
+
+        static sum(...numbers) {
+
+            if (numbers.length === 0) {
+                throw new ValidationError("Total parameter harus lebih dari 0", "numbers");
+            }
+
+            let total = 0;
+            for (const number of numbers) {
+                total += number;
+            }
+            return total;
+        }
+
+    }
+
+    try {
+        console.info(MathUtil.sum());
+        console.info("Eko");
+    } catch (error) {
+        if(error instanceof ValidationError){
+            console.info(`Terjadi error di field ${error.field} dengan error ${error.message}`);
+        }else{
+            console.info(`Terjadi error : ${error.message}`);
+        }
+    } finally {
+        console.info("Program selesai");
+    }
+
+    console.info("Khannedy");
+
+</script>
+
+Kode : Menggunakan ValidationError
+    class MathUtil {
+
+        static sum(...numbers) {
+
+            if (numbers.length === 0) {
+                throw new ValidationError("Total parameter harus lebih dari 0", "numbers");
+            }
+
+            let total = 0;
+            for (const number of numbers) {
+                total += number;
+            }
+            return total;
+        }
+
+    }
+
+Kode : Try Catch 
+    try {
+        console.info(MathUtil.sum());
+        console.info("Eko");
+    } catch (error) {
+        if(error instanceof ValidationError){
+            console.info(`Terjadi error di field ${error.field} dengan error ${error.message}`);
+        }else{
+            console.info(`Terjadi error : ${error.message}`);
+        }
+    } finally {
+        console.info("Program selesai");
+    }
+
+    console.info("Khannedy");
+
+Iterable dan Iterator
+Salah satu fitur terbaru di ES6 adalah iterable
+Iterable adalah spesial object yang memiliki standarisasi
+Dengan mengikuti standarisasi Iterable, secara otomatis kita bisa melakukan iterasi terdapat data tersebut dengan menggunakan perulangan for...of
+Contoh yang sudah mengikuti standarisasi Iterable adalah string, Array, Object, dan lain-lain
+
+Kode : Kontrak Iterable (dalam TypeScript)
+<script>
+
+    class CounterIteratorResult {
+        constructor(value, done) {
+            this.value = value;
+            this.done = done;
+        }
+    }
+
+    class CounterIterator {
+        constructor(value, max) {
+            this.value = value;
+            this.max = max;
+        }
+
+        next() {
+            try {
+                if (this.value > this.max) {
+                    return new CounterIteratorResult(this.value, true);
+                } else {
+                    return new CounterIteratorResult(this.value, false);
+                }
+            } finally {
+                this.value++;
+            }
+        }
+    }
+
+    class Counter {
+        constructor(value, max) {
+            this.value = value;
+            this.max = max;
+        }
+
+        [Symbol.iterator]() {
+            return new CounterIterator(this.value, this.max);
+        }
+    }
+
+    const counter = new Counter(1, 20);
+    for (const value of counter) {
+        console.info(value);
+    }
+
+</script>
+
+Kode : Kontrak Iterator (dalam TypeScript)
+
+Kontrak : IteratorResult (dalam TypeScript)
+
+Cara Kerja Iterable dan Iterator
+Jika kita mengikuti kontrak Iterable, maka object yang kita buat akan bisa dilakukan iterasi menggunakan for...of
+Setiap kita melakukan perulangan, object Iterator akan dibuat
+Hal ini menjadi aman jika kita melakukan iterasi berulang-ulang, karena Iterator baru akan dibuat terus menerus
+
+Kode : Membuat Counter Iterator Result
+    class CounterIteratorResult {
+        constructor(value, done) {
+            this.value = value;
+            this.done = done;
+        }
+    }
+
+Kode : Membuat Counter Iterator
+    class CounterIterator {
+        constructor(value, max) {
+            this.value = value;
+            this.max = max;
+        }
+
+        next() {
+            try {
+                if (this.value > this.max) {
+                    return new CounterIteratorResult(this.value, true);
+                } else {
+                    return new CounterIteratorResult(this.value, false);
+                }
+            } finally {
+                this.value++;
+            }
+        }
+    }
+
+Kode : Membuat Counter Iterable
+    class Counter {
+        constructor(value, max) {
+            this.value = value;
+            this.max = max;
+        }
+
+        [Symbol.iterator]() {
+            return new CounterIterator(this.value, this.max);
+        }
+    }
+
+Kode : Menggunakan Counter Iterable
+    const counter = new Counter(1, 20);
+    for (const value of counter) {
+        console.info(value);
+    }
+
+    
